@@ -1,0 +1,14 @@
+.git
+.next
+frontend/.next
+node_modules
+data
+backups
+coverage
+.env
+.env.*
+!.env.example
+*.zip
+*.db
+*.db-shm
+*.db-wal

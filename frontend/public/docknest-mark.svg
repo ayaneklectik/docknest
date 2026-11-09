@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Docknest mark</title>
+  <rect width="64" height="64" rx="18" fill="#122d28"/>
+  <path d="M17 15h9v12a13 13 0 1 1-9 12V15Zm9 24a5 5 0 1 0-10 0 5 5 0 0 0 10 0Z" fill="#FF6A2B"/>
+  <circle cx="45" cy="48" r="4" fill="#FF6A2B"/>
+</svg>

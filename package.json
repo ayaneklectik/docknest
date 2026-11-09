@@ -1,0 +1,39 @@
+{
+  "name": "docknest-platform",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev frontend",
+    "build": "next build frontend --webpack",
+    "start": "next start frontend",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p frontend/tsconfig.json",
+    "db:migrate": "tsx --tsconfig frontend/tsconfig.json backend/scripts/migrate.ts",
+    "db:backup": "tsx --tsconfig frontend/tsconfig.json backend/scripts/backup.ts",
+    "db:restore": "tsx --tsconfig frontend/tsconfig.json backend/scripts/restore.ts",
+    "admin:create": "tsx --tsconfig frontend/tsconfig.json backend/scripts/create-admin.ts",
+    "email:dispatch": "tsx --tsconfig frontend/tsconfig.json backend/scripts/dispatch-email.ts",
+    "test": "tsx --tsconfig frontend/tsconfig.json --test backend/tests/*.test.ts"
+  },
+  "dependencies": {
+    "better-auth": "^1.4.9",
+    "better-sqlite3": "^12.2.0",
+    "dotenv": "^17.2.2",
+    "next": "^16.4.5",
+    "nodemailer": "^10.4.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/eslint": "^9.6.1",
+    "@types/node": "^24.5.2",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "eslint": "^9.35.0",
+    "eslint-config-next": "^16.4.5",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
