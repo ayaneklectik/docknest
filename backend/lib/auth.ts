@@ -31,6 +31,12 @@ export const auth = betterAuth({
       }
     }
   },
+  advanced: {
+    // Behind Railway's proxy the client address arrives in x-forwarded-for.
+    ipAddress: {
+      ipAddressHeaders: ["x-forwarded-for"]
+    }
+  },
   rateLimit: {
     enabled: true,
     window: 60,
