@@ -66,17 +66,18 @@ export default function HomePage() {
         <div className="hero-word-matrix" aria-hidden="true">
           {heroBackgroundRows.map((row, rowIndex) => (
             <div className="hero-word-row" key={`row-${rowIndex}`}>
-              {row.map((word, columnIndex) => (
-                <span
-                  key={`${rowIndex}-${columnIndex}`}
-                  className={`hero-word hero-word-${word.tone}`}
-                  style={{
-                    fontSize: `${9 + ((rowIndex + columnIndex) % 3)}px`,
-                    animationDelay: `${-((rowIndex * 26 + columnIndex) % 20) * 0.7}s`,
-                  }}
-                >
-                  {word.label}
-                </span>
+              {[0, 1].map((copyIndex) => (
+                <div className="hero-word-row-copy" key={`copy-${copyIndex}`}>
+                  {row.map((word, columnIndex) => (
+                    <span
+                      key={`${rowIndex}-${copyIndex}-${columnIndex}`}
+                      className={`hero-word hero-word-${word.tone}`}
+                      style={{ fontSize: `${9 + ((rowIndex + columnIndex) % 3)}px` }}
+                    >
+                      {word.label}
+                    </span>
+                  ))}
+                </div>
               ))}
             </div>
           ))}
