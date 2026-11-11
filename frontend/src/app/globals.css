@@ -145,7 +145,7 @@ button, a, summary { -webkit-tap-highlight-color: transparent; }
   letter-spacing: .08em;
   text-transform: lowercase;
   text-shadow: 0 0 10px rgb(255 255 255 / 4%);
-  animation: hero-word-drift 17s ease-in-out infinite alternate;
+  animation: hero-word-drift 21s ease-in-out infinite alternate;
 }
 .hero-word-soft {
   color: rgb(255 255 255 / 12%);
