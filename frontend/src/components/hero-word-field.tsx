@@ -76,6 +76,7 @@ export function HeroWordField() {
       context!.clearRect(0, 0, width, height);
       context!.textBaseline = "middle";
       context!.lineJoin = "round";
+      const lightTheme = document.documentElement.dataset.theme === "light";
 
       const rowGap = 39;
       const rows = Math.ceil((height + 30) / rowGap);
@@ -107,7 +108,9 @@ export function HeroWordField() {
           context!.shadowColor = "rgba(255, 106, 43, 0.9)";
           context!.fillStyle = heat > 0.015
             ? `rgba(255, 106, 43, ${Math.min(0.95, baseAlpha + heat * 0.9)})`
-            : `rgba(255, 255, 255, ${baseAlpha})`;
+            : lightTheme
+              ? `rgba(23, 23, 23, ${ACCENTS.has(word) ? 0.3 : 0.16})`
+              : `rgba(255, 255, 255, ${baseAlpha})`;
           context!.fillText(word, x, y);
         }
       }
