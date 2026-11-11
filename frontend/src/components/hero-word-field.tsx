@@ -11,8 +11,11 @@ const WORDS = [
 ];
 
 const ACCENTS = new Set(["hosting", "launch", "security", ".com", ".org", "dns", ".io", "edge"]);
+const WORD_GAP = 9;
+const TRAIL_LIFETIME = 1350;
 
 type TrailPoint = { x: number; y: number; time: number };
+type WordPosition = { word: string; x: number; width: number };
 
 export function HeroWordField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -23,11 +26,6 @@ export function HeroWordField() {
     if (!canvas || !context) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const observer = new ResizeObserver(resize);
-    const visibility = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (visible && !reducedMotion && frameId === 0) frameId = requestAnimationFrame(draw);
-    });
     let width = 0;
     let height = 0;
     let dpr = 1;
@@ -36,7 +34,36 @@ export function HeroWordField() {
     let lastTime = 0;
     let elapsed = 0;
     let pointer: { x: number; y: number } | null = null;
+    let rows: Array<{ y: number; speed: number; direction: number; period: number; words: WordPosition[] }> = [];
     const trail: TrailPoint[] = [];
+
+    function buildRows() {
+      const rowGap = 39;
+      const rowCount = Math.ceil((height + 30) / rowGap);
+      rows = [];
+
+      for (let row = 0; row < rowCount; row++) {
+        const fontSize = 9 + (row % 3);
+        context!.font = `600 ${fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+        const words: WordPosition[] = [];
+        let cursor = 0;
+
+        for (let index = 0; index < WORDS.length; index++) {
+          const word = WORDS[(index + row * 7) % WORDS.length];
+          const wordWidth = context!.measureText(word).width;
+          words.push({ word, x: cursor, width: wordWidth });
+          cursor += wordWidth + WORD_GAP;
+        }
+
+        rows.push({
+          y: 25 + row * rowGap,
+          speed: 17 + (row % 5) * 3.5,
+          direction: row % 2 === 0 ? -1 : 1,
+          period: cursor,
+          words,
+        });
+      }
+    }
 
     function resize() {
       const rect = canvas!.getBoundingClientRect();
@@ -46,6 +73,7 @@ export function HeroWordField() {
       canvas!.width = Math.round(width * dpr);
       canvas!.height = Math.round(height * dpr);
       context!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      buildRows();
       if (reducedMotion) draw(performance.now());
     }
 
@@ -53,14 +81,17 @@ export function HeroWordField() {
       const rect = canvas!.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
+
       if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
         pointer = null;
         return;
       }
+
       pointer = { x, y };
       const now = performance.now();
       const previous = trail[trail.length - 1];
-      if (!previous || Math.hypot(x - previous.x, y - previous.y) > 7 || now - previous.time > 24) {
+
+      if (!previous || Math.hypot(x - previous.x, y - previous.y) > 3 || now - previous.time > 12) {
         trail.push({ x, y, time: now });
       }
     }
@@ -70,72 +101,84 @@ export function HeroWordField() {
         frameId = 0;
         return;
       }
+
       const delta = lastTime ? Math.min((now - lastTime) / 1000, 0.05) : 0;
       lastTime = now;
       elapsed += delta;
       context!.clearRect(0, 0, width, height);
       context!.textBaseline = "middle";
       context!.lineJoin = "round";
+
       const lightTheme = document.documentElement.dataset.theme === "light";
+      while (trail.length && now - trail[0].time > TRAIL_LIFETIME) trail.shift();
 
-      const rowGap = 39;
-      const rows = Math.ceil((height + 30) / rowGap);
-      const spacing = 126;
-      const nowMs = now;
-      while (trail.length && nowMs - trail[0].time > 1450) trail.shift();
+      for (const row of rows) {
+        const offset = reducedMotion ? 0 : (elapsed * row.speed * row.direction) % row.period;
+        const firstCycle = Math.floor((offset - row.period) / row.period);
+        const lastCycle = Math.ceil((width + offset) / row.period);
 
-      for (let row = 0; row < rows; row++) {
-        const y = 26 + row * rowGap;
-        const direction = row % 2 === 0 ? 1 : -1;
-        const speed = 10 + (row % 4) * 4;
-        const offset = reducedMotion ? 0 : ((elapsed * speed * direction) % spacing);
-        for (let column = -2; column < Math.ceil(width / spacing) + 3; column++) {
-          const word = WORDS[(row * 11 + column * 7 + WORDS.length * 4) % WORDS.length];
-          const x = column * spacing + offset;
-          const fontSize = 9 + ((row + column + 40) % 3);
-          context!.font = `600 ${fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-          const baseAlpha = ACCENTS.has(word) ? 0.34 : 0.145;
-          let heat = 0;
-          for (const point of trail) {
-            const age = (nowMs - point.time) / 1450;
-            const distance = Math.hypot(x - point.x, y - point.y);
-            if (distance < 118) {
-              const influence = Math.pow(1 - distance / 118, 2) * Math.pow(1 - age, 1.35);
-              heat = Math.max(heat, influence);
+        for (let cycle = firstCycle; cycle <= lastCycle; cycle++) {
+          const cycleStart = cycle * row.period - offset;
+
+          for (const item of row.words) {
+            const x = cycleStart + item.x;
+            if (x > width + 10 || x + item.width < -10) continue;
+
+            const centerX = x + item.width / 2;
+            let heat = 0;
+
+            for (const point of trail) {
+              const age = Math.max(0, (now - point.time) / TRAIL_LIFETIME);
+              const distance = Math.hypot(centerX - point.x, row.y - point.y);
+              if (distance < 112) {
+                const proximity = 1 - distance / 112;
+                const influence = proximity * proximity * (1 - age) * (1 - age);
+                heat = Math.max(heat, influence);
+              }
             }
+
+            const accent = ACCENTS.has(item.word);
+            const baseAlpha = accent ? 0.34 : 0.145;
+            context!.font = `600 ${9 + (rows.indexOf(row) % 3)}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+            context!.shadowBlur = heat > 0.015 ? 13 * heat : 0;
+            context!.shadowColor = "rgba(255, 106, 43, 0.8)";
+            context!.fillStyle = heat > 0.008
+              ? `rgba(255, 106, 43, ${Math.min(0.96, baseAlpha + heat * 0.88)})`
+              : lightTheme
+                ? `rgba(23, 23, 23, ${accent ? 0.3 : 0.16})`
+                : `rgba(255, 255, 255, ${baseAlpha})`;
+            context!.fillText(item.word, x, row.y);
           }
-          context!.shadowBlur = heat > 0.04 ? 15 * heat : 0;
-          context!.shadowColor = "rgba(255, 106, 43, 0.9)";
-          context!.fillStyle = heat > 0.015
-            ? `rgba(255, 106, 43, ${Math.min(0.95, baseAlpha + heat * 0.9)})`
-            : lightTheme
-              ? `rgba(23, 23, 23, ${ACCENTS.has(word) ? 0.3 : 0.16})`
-              : `rgba(255, 255, 255, ${baseAlpha})`;
-          context!.fillText(word, x, y);
         }
       }
 
       if (pointer && trail.length) {
-        const glow = context!.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 92);
-        glow.addColorStop(0, "rgba(255, 106, 43, 0.055)");
+        const glow = context!.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 84);
+        glow.addColorStop(0, "rgba(255, 106, 43, 0.045)");
         glow.addColorStop(1, "rgba(255, 106, 43, 0)");
         context!.fillStyle = glow;
-        context!.fillRect(pointer.x - 92, pointer.y - 92, 184, 184);
+        context!.fillRect(pointer.x - 84, pointer.y - 84, 168, 168);
       }
 
       context!.shadowBlur = 0;
       if (!reducedMotion) frameId = requestAnimationFrame(draw);
     }
 
-    observer.observe(canvas);
-    visibility.observe(canvas);
+    const resizeObserver = new ResizeObserver(resize);
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && !reducedMotion && frameId === 0) frameId = requestAnimationFrame(draw);
+    });
+
+    resizeObserver.observe(canvas);
+    visibilityObserver.observe(canvas);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     resize();
     if (!reducedMotion) frameId = requestAnimationFrame(draw);
 
     return () => {
-      observer.disconnect();
-      visibility.disconnect();
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
       window.removeEventListener("pointermove", onPointerMove);
       if (frameId) cancelAnimationFrame(frameId);
     };
