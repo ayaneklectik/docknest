@@ -11,7 +11,7 @@ const WORDS = [
 ];
 
 const ACCENTS = new Set(["hosting", "launch", "security", ".com", ".org", "dns", ".io", "edge"]);
-const WORD_GAP = 5;
+const WORD_GAP = 9;
 const TRAIL_LIFETIME = 1350;
 
 type TrailPoint = { x: number; y: number; time: number };
@@ -57,7 +57,7 @@ export function HeroWordField() {
 
         rows.push({
           y: 25 + row * rowGap,
-          speed: 17 + (row % 5) * 3.5,
+          speed: 3.2 + (row % 5) * 0.65,
           direction: row % 2 === 0 ? -1 : 1,
           period: cursor,
           words,
@@ -127,12 +127,16 @@ export function HeroWordField() {
             const x = cycleStart + item.x;
             if (x > width + 10 || x + item.width < -10) continue;
 
+            // Alternate a subtle diagonal slant between rows for a zigzag flow.
+            const diagonalPhase = (item.x / Math.max(row.period, 1)) * Math.PI * 2;
+            const diagonalY = Math.sin(diagonalPhase) * 3.5 * (rowIndex % 2 === 0 ? 1 : -1);
+            const wordY = row.y + diagonalY;
             const centerX = x + item.width / 2;
             let heat = 0;
 
             for (const point of trail) {
               const age = Math.max(0, (now - point.time) / TRAIL_LIFETIME);
-              const distance = Math.hypot(centerX - point.x, row.y - point.y);
+              const distance = Math.hypot(centerX - point.x, wordY - point.y);
               if (distance < 112) {
                 const proximity = 1 - distance / 112;
                 const influence = proximity * proximity * (1 - age) * (1 - age);
@@ -141,15 +145,15 @@ export function HeroWordField() {
             }
 
             const accent = ACCENTS.has(item.word);
-            const baseAlpha = accent ? 0.34 : 0.145;
+            const baseAlpha = accent ? 0.075 : 0.055;
             context!.shadowBlur = heat > 0.015 ? 13 * heat : 0;
             context!.shadowColor = "rgba(255, 106, 43, 0.8)";
             context!.fillStyle = heat > 0.008
               ? `rgba(255, 106, 43, ${Math.min(0.96, baseAlpha + heat * 0.88)})`
               : lightTheme
-                ? `rgba(23, 23, 23, ${accent ? 0.3 : 0.16})`
+                ? `rgba(23, 23, 23, ${accent ? 0.11 : 0.075})`
                 : `rgba(255, 255, 255, ${baseAlpha})`;
-            context!.fillText(item.word, x, row.y);
+            context!.fillText(item.word, x, wordY);
           }
         }
       }
