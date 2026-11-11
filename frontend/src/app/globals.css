@@ -106,7 +106,64 @@ button, a, summary { -webkit-tap-highlight-color: transparent; }
     linear-gradient(153deg, transparent 78%, rgb(182 38 19 / 16%) 79%, rgb(220 62 32 / 12%) 80%, transparent 82%);
   mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 100%);
 }
-.hero-grid { position: relative; width: min(1240px, calc(100% - 64px)); min-height: 700px; margin: auto; display: grid; grid-template-columns: 1fr; align-items: center; }
+.hero-word-matrix {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(6 7 8 / 10%) 0%, rgb(6 7 8 / 10%) 100%);
+}
+.hero-word-matrix::before {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(7 7 8 / 0%) 0%, rgb(7 7 8 / 35%) 34%, rgb(7 7 8 / 70%) 100%);
+  content: "";
+}
+.hero-word {
+  position: absolute;
+  z-index: 0;
+  white-space: nowrap;
+  color: rgb(255 255 255 / 8%);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: lowercase;
+  text-shadow: 0 0 10px rgb(255 255 255 / 4%);
+  transform: rotate(var(--word-rotate, 0deg));
+  animation: hero-word-drift var(--duration, 18s) ease-in-out infinite alternate;
+}
+.hero-word-soft {
+  color: rgb(255 255 255 / 7%);
+}
+.hero-word-accent {
+  color: rgb(255 116 72 / 32%);
+  text-shadow: 0 0 12px rgb(255 108 52 / 14%);
+}
+.hero-grid {
+  position: relative;
+  z-index: 1;
+  width: min(1240px, calc(100% - 64px));
+  min-height: 700px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+@keyframes hero-word-drift {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(var(--word-rotate, 0deg));
+    opacity: calc(var(--word-opacity, 0.12) * 0.7);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0) rotate(var(--word-rotate, 0deg));
+  }
+  100% {
+    transform: translate3d(0, 12px, 0) rotate(var(--word-rotate, 0deg));
+    opacity: var(--word-opacity, 0.12);
+  }
+}
 .hero-copy { position: relative; z-index: 1; padding: 72px 0 110px; }
 .eyebrow, .section-kicker { color: var(--muted); font: 500 10px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; }
 .hero .eyebrow { display: inline-flex; align-items: center; margin: 0; padding: 11px 17px; border: 1px solid rgb(255 255 255 / 22%); border-radius: 999px; color: #f4efec; font: 500 12px/1.2 "Avenir Next", Avenir, sans-serif; letter-spacing: .08em; }
