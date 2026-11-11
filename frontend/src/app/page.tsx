@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { HomeShowcase } from "@/components/home-showcase";
 import { HeroDashboard } from "@/components/hero-dashboard";
+import { HeroWordField } from "@/components/hero-word-field";
 import { listPublishedArticles } from "@backend/content";
 import { getSiteContent } from "@backend/site-content";
 import { listProducts } from "@backend/catalog";
@@ -9,53 +10,6 @@ import { productCategoryDetails } from "@/lib/catalog-types";
 
 export const dynamic = "force-dynamic";
 
-const heroBackgroundWords = [
-  { label: "domain", tone: "soft" },
-  { label: "hosting", tone: "accent" },
-  { label: "startup", tone: "soft" },
-  { label: "cloud", tone: "soft" },
-  { label: "brand", tone: "soft" },
-  { label: "launch", tone: "accent" },
-  { label: "website", tone: "soft" },
-  { label: "design", tone: "soft" },
-  { label: "support", tone: "soft" },
-  { label: "commerce", tone: "soft" },
-  { label: "security", tone: "accent" },
-  { label: "growth", tone: "soft" },
-  { label: ".com", tone: "accent" },
-  { label: ".net", tone: "soft" },
-  { label: "email", tone: "soft" },
-  { label: "api", tone: "soft" },
-  { label: "digital", tone: "soft" },
-  { label: "software", tone: "soft" },
-  { label: ".org", tone: "accent" },
-  { label: "studio", tone: "soft" },
-  { label: "dns", tone: "accent" },
-  { label: "creative", tone: "soft" },
-  { label: "global", tone: "soft" },
-  { label: "online", tone: "soft" },
-  { label: "business", tone: "soft" },
-  { label: "platform", tone: "soft" },
-  { label: "digital", tone: "soft" },
-  { label: "design", tone: "soft" },
-  { label: ".io", tone: "accent" },
-  { label: "market", tone: "soft" },
-  { label: "web", tone: "soft" },
-  { label: "build", tone: "soft" },
-  { label: "managed", tone: "soft" },
-  { label: "dedicated", tone: "soft" },
-  { label: "apps", tone: "soft" },
-  { label: "community", tone: "soft" },
-  { label: "ideas", tone: "soft" },
-  { label: "edge", tone: "accent" },
-];
-
-const heroBackgroundRows = Array.from({ length: 26 }, (_, row) =>
-  Array.from({ length: 26 }, (_, column) =>
-    heroBackgroundWords[(row * 13 + column * 7) % heroBackgroundWords.length],
-  ),
-);
-
 export default function HomePage() {
   const { home } = getSiteContent();
   const products = listProducts();
@@ -63,24 +17,7 @@ export default function HomePage() {
   return (
     <>
       <section className="hero">
-        <div className="hero-word-matrix" aria-hidden="true">
-          {heroBackgroundRows.map((row, rowIndex) => (
-            <div className="hero-word-row" key={`row-${rowIndex}`}>
-              {row.map((word, columnIndex) => (
-                <span
-                  key={`${rowIndex}-${columnIndex}`}
-                  className={`hero-word hero-word-${word.tone}`}
-                  style={{
-                    fontSize: `${9 + ((rowIndex + columnIndex) % 3)}px`,
-                    animationDelay: `${-((rowIndex * 26 + columnIndex) % 20) * 0.7}s`,
-                  }}
-                >
-                  {word.label}
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
+        <HeroWordField />
         <div className="hero-grid">
           <div className="hero-copy">
             <p className="eyebrow"><span className="status-dot" /> {home.heroEyebrow}</p>
