@@ -11,7 +11,7 @@ const WORDS = [
 ];
 
 const ACCENTS = new Set(["hosting", "launch", "security", ".com", ".org", "dns", ".io", "edge"]);
-const WORD_GAP = 9;
+const WORD_GAP = 5;
 const TRAIL_LIFETIME = 1350;
 
 type TrailPoint = { x: number; y: number; time: number };
@@ -91,8 +91,9 @@ export function HeroWordField() {
       const now = performance.now();
       const previous = trail[trail.length - 1];
 
-      if (!previous || Math.hypot(x - previous.x, y - previous.y) > 3 || now - previous.time > 12) {
+      if (!previous || Math.hypot(x - previous.x, y - previous.y) > 6 || now - previous.time > 16) {
         trail.push({ x, y, time: now });
+        if (trail.length > 80) trail.shift();
       }
     }
 
@@ -112,7 +113,9 @@ export function HeroWordField() {
       const lightTheme = document.documentElement.dataset.theme === "light";
       while (trail.length && now - trail[0].time > TRAIL_LIFETIME) trail.shift();
 
-      for (const row of rows) {
+      for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+        const row = rows[rowIndex];
+        context!.font = `600 ${9 + (rowIndex % 3)}px ui-monospace, SFMono-Regular, Menlo, monospace`;
         const offset = reducedMotion ? 0 : (elapsed * row.speed * row.direction) % row.period;
         const firstCycle = Math.floor((offset - row.period) / row.period);
         const lastCycle = Math.ceil((width + offset) / row.period);
@@ -139,7 +142,6 @@ export function HeroWordField() {
 
             const accent = ACCENTS.has(item.word);
             const baseAlpha = accent ? 0.34 : 0.145;
-            context!.font = `600 ${9 + (rows.indexOf(row) % 3)}px ui-monospace, SFMono-Regular, Menlo, monospace`;
             context!.shadowBlur = heat > 0.015 ? 13 * heat : 0;
             context!.shadowColor = "rgba(255, 106, 43, 0.8)";
             context!.fillStyle = heat > 0.008
