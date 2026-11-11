@@ -110,36 +110,49 @@ button, a, summary { -webkit-tap-highlight-color: transparent; }
   position: absolute;
   inset: 0;
   z-index: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   overflow: hidden;
+  padding: 68px 4% 55px;
   pointer-events: none;
-  background:
-    linear-gradient(180deg, rgb(6 7 8 / 10%) 0%, rgb(6 7 8 / 10%) 100%);
 }
 .hero-word-matrix::before {
   position: absolute;
+  z-index: 1;
   inset: 0;
-  background: linear-gradient(180deg, rgb(7 7 8 / 0%) 0%, rgb(7 7 8 / 35%) 34%, rgb(7 7 8 / 70%) 100%);
+  background: linear-gradient(180deg, rgb(7 7 8 / 5%) 0%, rgb(7 7 8 / 20%) 43%, rgb(7 7 8 / 12%) 73%, rgb(7 7 8 / 42%) 100%);
   content: "";
 }
-.hero-word {
-  position: absolute;
-  z-index: 0;
+.hero-word-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(14px, 1.5vw, 28px);
+  min-width: 100%;
   white-space: nowrap;
-  color: rgb(255 255 255 / 8%);
+}
+.hero-word {
+  z-index: 0;
+  flex: 0 0 auto;
+  white-space: nowrap;
+  color: rgb(255 255 255 / 12%);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-weight: 500;
   letter-spacing: .08em;
   text-transform: lowercase;
   text-shadow: 0 0 10px rgb(255 255 255 / 4%);
-  transform: rotate(var(--word-rotate, 0deg));
-  animation: hero-word-drift var(--duration, 18s) ease-in-out infinite alternate;
+  animation: hero-word-drift 17s ease-in-out infinite alternate;
 }
 .hero-word-soft {
-  color: rgb(255 255 255 / 7%);
+  color: rgb(255 255 255 / 12%);
 }
 .hero-word-accent {
-  color: rgb(255 116 72 / 32%);
-  text-shadow: 0 0 12px rgb(255 108 52 / 14%);
+  color: rgb(255 116 72 / 48%);
+  text-shadow: 0 0 12px rgb(255 108 52 / 18%);
 }
 .hero-grid {
   position: relative;
@@ -152,17 +165,8 @@ button, a, summary { -webkit-tap-highlight-color: transparent; }
   align-items: center;
 }
 @keyframes hero-word-drift {
-  0% {
-    transform: translate3d(0, 0, 0) rotate(var(--word-rotate, 0deg));
-    opacity: calc(var(--word-opacity, 0.12) * 0.7);
-  }
-  50% {
-    transform: translate3d(0, -10px, 0) rotate(var(--word-rotate, 0deg));
-  }
-  100% {
-    transform: translate3d(0, 12px, 0) rotate(var(--word-rotate, 0deg));
-    opacity: var(--word-opacity, 0.12);
-  }
+  from { opacity: .58; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(-2px); }
 }
 .hero-copy { position: relative; z-index: 1; padding: 72px 0 110px; }
 .eyebrow, .section-kicker { color: var(--muted); font: 500 10px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; }
@@ -1489,6 +1493,8 @@ h1 em, h2 em, .page-hero h1 em, .content-section h2 em { color: var(--ink); }
     linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%);
 }
 :root[data-theme="light"] .hero::after { opacity: .08; }
+:root[data-theme="light"] .hero-word-soft { color: rgb(23 23 23 / 20%); }
+:root[data-theme="light"] .hero-word-accent { color: rgb(176 65 29 / 62%); }
 :root[data-theme="light"] .site-header .header-inner { box-shadow: 0 8px 32px rgb(0 0 0 / 4%); }
 :root[data-theme="light"] .button,
 :root[data-theme="light"] .button-dark,
@@ -1667,6 +1673,9 @@ h1 em, h2 em, .page-hero h1 em, .content-section h2 em { color: var(--ink); }
   .header-inner { height: 58px; padding: 0 8px 0 14px; }
   .brand { font-size: 17px; }
   .brand-mark { width: 29px; height: 29px; font-size: 20px; }
+  .hero-word-matrix { padding: 58px 18px 48px; }
+  .hero-word-row { width: 120%; margin-left: -10%; gap: 14px; }
+  .hero-word-row .hero-word:nth-child(n + 11) { display: none; }
   .hero-grid { min-height: 600px; }
   .hero-copy { padding: 84px 0 90px; }
   .hero h1 { font-size: clamp(42px, 11vw, 62px); }
@@ -2258,6 +2267,7 @@ textarea:focus-visible { outline-color: #FF6A2B; }
 :root[data-theme="light"] .brand-mark span { color: #241108; }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-word { animation: none !important; }
   .hero-dashboard { animation: none !important; transform: none !important; }
   .hero-dashboard-card:hover { transform: none; }
 }
