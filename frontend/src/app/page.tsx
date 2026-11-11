@@ -10,50 +10,51 @@ import { productCategoryDetails } from "@/lib/catalog-types";
 export const dynamic = "force-dynamic";
 
 const heroBackgroundWords = [
-  { label: "domain", left: 6, top: 18, size: 11, opacity: 0.14, duration: 16, delay: 0, tone: "soft" },
-  { label: "startup", left: 18, top: 25, size: 10, opacity: 0.12, duration: 18, delay: 1, tone: "soft" },
-  { label: "hosting", left: 32, top: 19, size: 12, opacity: 0.18, duration: 14, delay: 2, tone: "accent" },
-  { label: "cloud", left: 41, top: 29, size: 11, opacity: 0.12, duration: 17, delay: 3, tone: "soft" },
-  { label: "brand", left: 54, top: 22, size: 10, opacity: 0.12, duration: 21, delay: 1.5, tone: "soft" },
-  { label: "launch", left: 68, top: 28, size: 12, opacity: 0.16, duration: 19, delay: 2.5, tone: "accent" },
-  { label: "stack", left: 83, top: 15, size: 10, opacity: 0.12, duration: 15, delay: 0.5, tone: "soft" },
-  { label: ".com", left: 88, top: 35, size: 14, opacity: 0.22, duration: 13, delay: 3.5, tone: "accent" },
-  { label: "website", left: 10, top: 40, size: 11, opacity: 0.12, duration: 18, delay: 4, tone: "soft" },
-  { label: "design", left: 24, top: 46, size: 10, opacity: 0.12, duration: 17, delay: 7, tone: "soft" },
-  { label: "support", left: 37, top: 49, size: 11, opacity: 0.14, duration: 15, delay: 5, tone: "soft" },
-  { label: "care", left: 52, top: 44, size: 10, opacity: 0.12, duration: 20, delay: 9, tone: "soft" },
-  { label: "api", left: 64, top: 52, size: 11, opacity: 0.13, duration: 18, delay: 3, tone: "soft" },
-  { label: "automation", left: 78, top: 49, size: 11, opacity: 0.12, duration: 22, delay: 8, tone: "soft" },
-  { label: "commerce", left: 12, top: 62, size: 11, opacity: 0.14, duration: 14, delay: 11, tone: "soft" },
-  { label: "render", left: 30, top: 68, size: 10, opacity: 0.12, duration: 19, delay: 4, tone: "soft" },
-  { label: "market", left: 44, top: 72, size: 11, opacity: 0.14, duration: 16, delay: 10, tone: "soft" },
-  { label: "provision", left: 58, top: 64, size: 10, opacity: 0.12, duration: 23, delay: 6.5, tone: "soft" },
-  { label: "security", left: 74, top: 72, size: 11, opacity: 0.13, duration: 17, delay: 9.5, tone: "accent" },
-  { label: "growth", left: 88, top: 66, size: 10, opacity: 0.12, duration: 20, delay: 7, tone: "soft" },
-  { label: "dns", left: 16, top: 82, size: 12, opacity: 0.15, duration: 17, delay: 12, tone: "accent" },
-  { label: "email", left: 28, top: 86, size: 10, opacity: 0.12, duration: 21, delay: 8.5, tone: "soft" },
-  { label: "builder", left: 43, top: 84, size: 11, opacity: 0.13, duration: 18, delay: 13, tone: "soft" },
-  { label: "software", left: 58, top: 90, size: 11, opacity: 0.13, duration: 15, delay: 5.5, tone: "soft" },
-  { label: "community", left: 72, top: 86, size: 10, opacity: 0.12, duration: 18, delay: 10.5, tone: "soft" },
-  { label: "traffic", left: 82, top: 90, size: 11, opacity: 0.12, duration: 20, delay: 6, tone: "soft" },
-  { label: "studio", left: 6, top: 58, size: 12, opacity: 0.16, duration: 19, delay: 14, tone: "soft" },
-  { label: "identity", left: 90, top: 52, size: 10, opacity: 0.12, duration: 18, delay: 3.5, tone: "soft" },
-  { label: "io", left: 62, top: 14, size: 13, opacity: 0.16, duration: 16, delay: 15, tone: "accent" },
-  { label: "data", left: 20, top: 34, size: 10, opacity: 0.12, duration: 22, delay: 11, tone: "soft" },
-  { label: "local", left: 49, top: 59, size: 9, opacity: 0.11, duration: 23, delay: 12.5, tone: "soft" },
-  { label: "ops", left: 73, top: 35, size: 10, opacity: 0.12, duration: 19, delay: 7.5, tone: "soft" },
-  { label: "tld", left: 36, top: 12, size: 9, opacity: 0.11, duration: 22, delay: 13, tone: "soft" },
-  { label: "edge", left: 57, top: 80, size: 10, opacity: 0.12, duration: 17, delay: 6, tone: "soft" },
-  { label: "global", left: 47, top: 92, size: 10, opacity: 0.12, duration: 20, delay: 14, tone: "soft" },
-  { label: "infra", left: 74, top: 58, size: 9, opacity: 0.11, duration: 15, delay: 9, tone: "soft" },
-  { label: "users", left: 88, top: 84, size: 9, opacity: 0.11, duration: 21, delay: 11, tone: "soft" },
-  { label: "portal", left: 12, top: 72, size: 10, opacity: 0.12, duration: 18, delay: 16, tone: "soft" },
-  { label: "launchpad", left: 64, top: 45, size: 9, opacity: 0.11, duration: 24, delay: 7.5, tone: "soft" },
-  { label: "b2b", left: 28, top: 55, size: 9, opacity: 0.11, duration: 19, delay: 18, tone: "soft" },
-  { label: "payments", left: 82, top: 24, size: 9, opacity: 0.12, duration: 20, delay: 12.5, tone: "soft" },
-  { label: "web", left: 52, top: 35, size: 11, opacity: 0.15, duration: 16, delay: 9, tone: "soft" },
-  { label: "index", left: 7, top: 48, size: 10, opacity: 0.12, duration: 18, delay: 5.5, tone: "soft" },
+  { label: "domain", tone: "soft" },
+  { label: "hosting", tone: "accent" },
+  { label: "startup", tone: "soft" },
+  { label: "cloud", tone: "soft" },
+  { label: "brand", tone: "soft" },
+  { label: "launch", tone: "accent" },
+  { label: "website", tone: "soft" },
+  { label: "design", tone: "soft" },
+  { label: "support", tone: "soft" },
+  { label: "commerce", tone: "soft" },
+  { label: "security", tone: "accent" },
+  { label: "growth", tone: "soft" },
+  { label: ".com", tone: "accent" },
+  { label: ".net", tone: "soft" },
+  { label: "email", tone: "soft" },
+  { label: "api", tone: "soft" },
+  { label: "digital", tone: "soft" },
+  { label: "software", tone: "soft" },
+  { label: ".org", tone: "accent" },
+  { label: "studio", tone: "soft" },
+  { label: "dns", tone: "accent" },
+  { label: "creative", tone: "soft" },
+  { label: "global", tone: "soft" },
+  { label: "online", tone: "soft" },
+  { label: "business", tone: "soft" },
+  { label: "platform", tone: "soft" },
+  { label: "digital", tone: "soft" },
+  { label: "design", tone: "soft" },
+  { label: ".io", tone: "accent" },
+  { label: "market", tone: "soft" },
+  { label: "web", tone: "soft" },
+  { label: "build", tone: "soft" },
+  { label: "managed", tone: "soft" },
+  { label: "dedicated", tone: "soft" },
+  { label: "apps", tone: "soft" },
+  { label: "community", tone: "soft" },
+  { label: "ideas", tone: "soft" },
+  { label: "edge", tone: "accent" },
 ];
+
+const heroBackgroundRows = Array.from({ length: 26 }, (_, row) =>
+  Array.from({ length: 26 }, (_, column) =>
+    heroBackgroundWords[(row * 13 + column * 7) % heroBackgroundWords.length],
+  ),
+);
 
 export default function HomePage() {
   const { home } = getSiteContent();
@@ -63,23 +64,21 @@ export default function HomePage() {
     <>
       <section className="hero">
         <div className="hero-word-matrix" aria-hidden="true">
-          {heroBackgroundWords.map((word, index) => (
-            <span
-              key={`${word.label}-${index}`}
-              className={`hero-word hero-word-${word.tone}`}
-              style={{
-                left: `${word.left}%`,
-                top: `${word.top}%`,
-                fontSize: `${word.size}px`,
-                opacity: word.opacity,
-                animationDuration: `${word.duration}s`,
-                animationDelay: `${word.delay}s`,
-                ["--word-opacity"]: String(word.opacity),
-                ["--word-rotate"]: `${(index % 2 === 0 ? 1 : -1) * (index % 5) * 2.5}deg`,
-              } as React.CSSProperties}
-            >
-              {word.label}
-            </span>
+          {heroBackgroundRows.map((row, rowIndex) => (
+            <div className="hero-word-row" key={`row-${rowIndex}`}>
+              {row.map((word, columnIndex) => (
+                <span
+                  key={`${rowIndex}-${columnIndex}`}
+                  className={`hero-word hero-word-${word.tone}`}
+                  style={{
+                    fontSize: `${9 + ((rowIndex + columnIndex) % 3)}px`,
+                    animationDelay: `${-((rowIndex * 26 + columnIndex) % 20) * 0.7}s`,
+                  }}
+                >
+                  {word.label}
+                </span>
+              ))}
+            </div>
           ))}
         </div>
         <div className="hero-grid">
